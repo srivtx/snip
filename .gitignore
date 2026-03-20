@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Test / debug artifacts
+test.png
+test.svg
+test.mmd
+test-bg.js
+test-video.js
+sample-snip.png
+sample-snip-opt.png
+profile.jpg
+profile-opt.jpg
+context.txt
+
+# OCR training data (5MB+ binary)
+eng.traineddata
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local

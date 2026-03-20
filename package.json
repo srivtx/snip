@@ -1,0 +1,45 @@
+{
+  "name": "snip",
+  "version": "1.0.0",
+  "description": "Beautiful code snippet cards from your terminal. Like Carbon, but faster.",
+  "type": "module",
+  "bin": {
+    "snip": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "keywords": [
+    "code",
+    "snippet",
+    "screenshot",
+    "carbon",
+    "terminal",
+    "cli",
+    "developer-tools"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "@imgly/background-removal-node": "^1.4.5",
+    "commander": "^12.1.0",
+    "diff": "^8.0.3",
+    "ffmpeg-static": "^5.3.0",
+    "get-rgba-palette": "^2.0.1",
+    "got": "^14.6.6",
+    "jimp": "^0.16.1",
+    "metascraper": "^5.49.25",
+    "metascraper-description": "^5.49.25",
+    "metascraper-image": "^5.49.25",
+    "metascraper-logo": "^5.49.25",
+    "metascraper-title": "^5.49.25",
+    "picocolors": "^1.1.1",
+    "puppeteer": "^23.0.0",
+    "puppeteer-screen-recorder": "^3.0.6",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
+    "shiki": "^1.27.0",
+    "tesseract.js": "^7.0.0",
+    "tinycolor2": "^1.6.0"
+  }
+}

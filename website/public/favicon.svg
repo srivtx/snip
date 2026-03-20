@@ -1,0 +1,9 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#050505" />
+  
+  <!-- The ">" symbol -->
+  <path d="M160 160 L300 256 L160 352" stroke="white" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- The "_" cursor -->
+  <path d="M320 352 L400 352" stroke="white" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
