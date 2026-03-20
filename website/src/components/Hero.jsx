@@ -7,7 +7,7 @@ export default function Hero() {
   const [copied, setCopied] = React.useState(false);
 
   const copyCommand = () => {
-    navigator.clipboard.writeText('npm install -g snip');
+    navigator.clipboard.writeText('npm install -g @srivtx/snip');
     setCopied(true);
     confetti({
       particleCount: 150,
@@ -86,7 +86,7 @@ export default function Hero() {
                 onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
               >
                 <Terminal size={14} className="text-dim" />
-                <span style={{ color: '#fff', fontWeight: 600 }}>npm i -g snip</span>
+                <span style={{ color: '#fff', fontWeight: 600 }}>npm i -g @srivtx/snip</span>
                 <div style={{ width: '1px', height: '16px', background: 'var(--color-border)' }} />
                 {copied ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
               </div>
