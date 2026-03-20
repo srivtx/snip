@@ -1,6 +1,6 @@
 {
   "name": "@srivtx/snip",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Beautiful code snippet cards from your terminal. Like Carbon, but faster.",
   "type": "module",
   "bin": {
@@ -24,6 +24,11 @@
     "developer-tools"
   ],
   "license": "MIT",
+  "overrides": {
+    "puppeteer-screen-recorder": {
+      "puppeteer": "$puppeteer"
+    }
+  },
   "dependencies": {
     "@clack/prompts": "^1.1.0",
     "@imgly/background-removal-node": "^1.4.5",
