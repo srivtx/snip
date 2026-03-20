@@ -34,7 +34,7 @@ function App() {
             <div style={{ display: 'flex', gap: '32px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>
               <Link to="/" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}>Home</Link>
               <Link to="/docs" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}>Docs</Link>
-              <a href="https://github.com" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}><Github size={16} /></a>
+              <a href="https://github.com/srivtx/snip" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}><Github size={16} /></a>
             </div>
             <button className="btn-studio" style={{ padding: '8px 16px', fontSize: '11px' }}>
               Get Snip
