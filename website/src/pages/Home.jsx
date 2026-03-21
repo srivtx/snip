@@ -8,6 +8,14 @@ import TerminalSimulator from '../components/TerminalSimulator';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
+  const [copied, setCopied] = React.useState(false);
+
+  const copyInstall = () => {
+    navigator.clipboard.writeText('npm install -g @srivtx/snip');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
       {/* Glow orbs sit behind content but above textures */}
@@ -78,7 +86,7 @@ export default function Home() {
               Standardize your technical communication with the most powerful terminal toolkit ever built.
             </p>
             <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-              <button className="btn-studio" onClick={() => { navigator.clipboard.writeText('npm install -g @srivtx/snip'); alert('Copied: npm install -g @srivtx/snip'); }}>Initialize Snip</button>
+              <button className="btn-studio" onClick={copyInstall}>{copied ? '✓ Copied to Clipboard' : 'Initialize Snip'}</button>
               <Link to="/docs" style={{ textDecoration: 'none' }}>
                 <button className="btn-studio-secondary" style={{ gap: '10px' }}>
                   Documentation <ArrowUpRight size={16} />

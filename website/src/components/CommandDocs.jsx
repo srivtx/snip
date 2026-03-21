@@ -120,8 +120,8 @@ const ALL_COMMANDS = [
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
           <img src="/cat.jpg" alt="Author" style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.05)' }} />
           <div>
-            <div style={{ fontWeight: 700, fontSize: '16px', color: '#e7e9ea' }}>Engineering Toolkit</div>
-            <div style={{ color: '#71767b', fontSize: '14px' }}>@snip_engine</div>
+            <div style={{ fontWeight: 700, fontSize: '16px', color: '#e7e9ea' }}>Sribatsha Dash</div>
+            <div style={{ color: '#71767b', fontSize: '14px' }}>@srivtx</div>
           </div>
         </div>
         <div style={{ fontSize: '22px', lineHeight: 1.4, color: '#e7e9ea', letterSpacing: '-0.3px', fontWeight: 500 }}>
