@@ -63,7 +63,7 @@ export default function Hero() {
               gap: '20px',
               flexWrap: 'wrap'
             }}>
-              <button className="btn-studio">
+              <button className="btn-studio" onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}>
                 Explore Studio <ArrowRight size={16} />
               </button>
 

@@ -78,7 +78,7 @@ export default function Home() {
               Standardize your technical communication with the most powerful terminal toolkit ever built.
             </p>
             <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-              <button className="btn-studio">Initialize Snip</button>
+              <button className="btn-studio" onClick={() => { navigator.clipboard.writeText('npm install -g @srivtx/snip'); alert('Copied: npm install -g @srivtx/snip'); }}>Initialize Snip</button>
               <Link to="/docs" style={{ textDecoration: 'none' }}>
                 <button className="btn-studio-secondary" style={{ gap: '10px' }}>
                   Documentation <ArrowUpRight size={16} />

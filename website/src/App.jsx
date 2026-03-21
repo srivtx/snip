@@ -36,9 +36,11 @@ function App() {
               <Link to="/docs" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}>Docs</Link>
               <a href="https://github.com/srivtx/snip" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', opacity: 0.4 }}><Github size={16} /></a>
             </div>
-            <button className="btn-studio" style={{ padding: '8px 16px', fontSize: '11px' }}>
-              Get Snip
-            </button>
+            <a href="https://www.npmjs.com/package/@srivtx/snip" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              <button className="btn-studio" style={{ padding: '8px 16px', fontSize: '11px' }}>
+                Get Snip
+              </button>
+            </a>
           </div>
         </nav>
 
