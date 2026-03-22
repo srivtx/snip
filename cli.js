@@ -639,7 +639,7 @@ tool.command('product-video')
             await captureProductVideo(fullUrl, outputPath, { 
                 background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
                 duration: parseInt(opts.duration, 10),
-                noWindow: opts.noWindow,
+                noWindow: opts.window === false,
             });
             let displayPath = outputPath.startsWith(os.homedir()) ? outputPath.replace(os.homedir(), '~') : outputPath;
             console.log(`\n  \x1b[32m✔\x1b[0m Product video saved to \x1b[1m${displayPath}\x1b[0m\n`);
