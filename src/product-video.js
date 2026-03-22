@@ -31,11 +31,25 @@ export async function captureProductVideo(url, outputPath, options = {}) {
     const page = await browser.newPage();
     await page.setViewport({ width, height, deviceScaleFactor: 2 });
 
+    const stabilizePage = async (frameOrPage) => {
+        console.log(`  \x1b[90mPre-loading assets and stabilizing scroll...\x1b[0m`);
+        await frameOrPage.evaluate(async () => {
+            const style = document.createElement('style');
+            style.innerHTML = `* { scroll-behavior: auto !important; } html, body { scroll-behavior: auto !important; }`;
+            document.head.appendChild(style);
+            window.scrollTo(0, document.documentElement.scrollHeight);
+            await new Promise(r => setTimeout(r, 1200));
+            window.scrollTo(0, 0);
+            await new Promise(r => setTimeout(r, 1000));
+        });
+    };
+
     console.log(`\n  \x1b[90mPreparing cinematic tour: ${url}...\x1b[0m`);
 
     if (noWindow) {
         // ── Pure Mode (Full Viewport) ──
         await page.goto(url, { waitUntil: 'networkidle2' });
+        await stabilizePage(page);
         await new Promise(r => setTimeout(r, 2000));
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording native site tour...\x1b[0m`);
@@ -129,6 +143,8 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         
         // Wait for network to slow down inside the iframe
         await new Promise(r => setTimeout(r, 4000));
+
+        await stabilizePage(frame);
 
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording cinematic tour...\x1b[0m`);
