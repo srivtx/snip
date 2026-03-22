@@ -1,98 +1,99 @@
-# ✂️ snip
+# snip
 
-> **The high-fidelity media engine for developers.**
-> Generate snippets, diagrams, and cinematic production directly from your CLI.
+A fast, local CLI tool for generating high-quality code snippets, social cards, mockups, and diagrams. It runs entirely on your machine without making API calls to third-party services.
 
 [![npm version](https://img.shields.io/npm/v/@srivtx/snip.svg)](https://npmjs.org/package/@srivtx/snip)
 
-Snip is the definitive terminal toolkit for engineering communication. Stop context switching to heavy design apps just to share a code block, create an architecture diagram, or generate a social card. 
-
 ## Installation
 
+We heavily recommend using `bun` because it skips the slow Puppeteer Chromium download time. 
+
+**Using Bun (Fastest)**
+```bash
+bun add -g @srivtx/snip --trusted
+```
+
+**Using npm**
 ```bash
 npm install -g @srivtx/snip
 ```
 
-## Global Configuration
+## Setup
 
-You can permanently save your author details (for posts/snippets) and preferences so you don't have to type them every time.
+You can set your default author name, social handle, and preferred theme so you don't have to type them as flags every time.
 
 ```bash
 snip config --init
 ```
-This launches an interactive wizard configuring your `~/.sniprc.json`.
 
 ---
 
-## 🛠 Core Commands
+## Commands
 
 ### 1. Code Snippets
-Turn source code into beautiful, syntax-highlighted PNGs within milliseconds.
+Turn local files or clipboard data into syntax-highlighted PNGs.
 
 ```bash
-# From a file (auto-detects language)
+# Reads file and auto-detects language
 snip src/utils.js
 
-# From clipboard
+# Reads directly from clipboard 
 snip --paste --lang python
 ```
 
-### 2. Beautiful Text Posts
-Generate high-engagement social media posts for X, LinkedIn, or documentation.
+### 2. Social Posts
+Generate text-based social media cards (like X or LinkedIn posts) with your author attribution.
 
 ```bash
-# Inline text
-snip post "Just shipped the new rendering engine! 🚀"
-
-# With specific author tags
-snip post "Hello World" --author "Zen" --handle "@zen" --bg neon
+snip post "Just shipped the new rendering engine!" --author "Zen" --handle "@zen" --bg neon
 ```
 
 ### 3. Website Mockups
-Generate gorgeous Safari browser mockups from any URL or local HTML file.
+Wrap a URL or local HTML file in a Safari browser frame.
 
 ```bash
 snip mockup https://github.com/srivtx/snip
 ```
 
-### 4. Architecture Diagrams (Mermaid)
-Render Mermaid.js diagrams directly to high-res PNGs without opening a browser.
+### 4. Diagrams
+Render Mermaid.js diagrams to high-res PNGs.
 
 ```bash
-# From file
 snip diagram architecture.mmd
-
-# From clipboard
 snip diagram --paste
 ```
 
-### 5. Open Graph (OG) Images
-Generate dynamic social preview images for your blog or website.
+### 5. Open Graph Images
+Quickly generate an OG image for a blog post or website.
 
 ```bash
-snip tool og "How to Build a Media Engine" --bg dawn
+snip tool og "How to Build a CLI" --bg dawn
 ```
 
 ---
 
-## 🖼 Image Utilities (`snip image`)
+## Image Utilities
 
-- **Remove Backgrounds:** `snip image bg-remove profile.jpg`
-- **Compress (TinyPNG-style):** `snip image compress heavy.png --quality 80`
-- **OCR (Extract Text):** `snip image ocr screenshot.png`
-- **SVG to PNG:** `snip image svg2png logo.svg --width 1200`
-- **Resize:** `snip image resize hero.png 1200x800`
+We added some local image processing utilities so you don't need to open Photoshop.
 
-## ⚙️ Engineering Tools (`snip tool`)
+- `snip image bg-remove profile.jpg` (Removes background locally using AI)
+- `snip image compress heavy.png --quality 80` (Fast TinyPNG alternative)
+- `snip image ocr screenshot.png` (Extracts text from images)
+- `snip image svg2png logo.svg --width 1200`
+- `snip image resize hero.png 1200x800`
 
-- **QR Codes:** `snip tool qr https://github.com/srivtx/snip`
-- **Color Extraction:** `snip tool colors brand.png`
-- **Favicons:** `snip tool favicon logo.png` *(generates all standard sizes)*
-- **Base64 Encode:** `snip tool base64 image.png`
+## Developer Tools
 
-## 🎬 Video Production (`snip video`)
+Quick tools for common web-dev tasks.
 
-Create cinematic product tours and screen recordings from image sequences.
+- `snip tool qr https://github.com/srivtx/snip`
+- `snip tool colors brand.png` (Extract dominant palette)
+- `snip tool favicon logo.png` (Generates all standard `.ico` and `.png` sizes)
+- `snip tool base64 image.png`
+
+## Video
+
+Generate scrolling `.mp4` videos from code snippets or product UI frames.
 
 ```bash
 snip video product ./frames --output trailer.mp4
@@ -100,16 +101,16 @@ snip video product ./frames --output trailer.mp4
 
 ---
 
-## Theming
+## Themes
 
-Snip includes handcrafted, boutique engineering themes out of the box. Use the `--bg` flag on almost any command:
+Use the `--bg` flag on almost any command to apply a custom background gradient. Available themes:
 
-- `ocean` (Deep blues & cyans)
-- `sunset` (Warm oranges & purples)
-- `aurora` (Vibrant greens & blues)
-- `neon` (Cyberpunk pinks & purples)
-- `midnight` (Sleek, ultra-dark grayscale)
-- `dawn` (Soft morning gradients)
+- `ocean`
+- `sunset`
+- `aurora`
+- `neon`
+- `midnight`
+- `dawn`
 
 ```bash
 snip main.rs --bg midnight
@@ -117,4 +118,4 @@ snip main.rs --bg midnight
 
 ## License
 
-MIT © Boutique Engineering Toolkit
+MIT
