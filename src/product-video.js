@@ -14,22 +14,28 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         duration = 8000, 
         click = null,
         noWindow = false,
+        linear = false,
     } = options;
 
     const bg = getBackground(background);
     const browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--font-render-hinting=none'],
+        args: [
+            '--no-sandbox', 
+            '--font-render-hinting=none',
+            '--disable-web-security',
+            '--disable-features=IsolateOrigins,site-per-process'
+        ],
     });
 
     const page = await browser.newPage();
     await page.setViewport({ width, height, deviceScaleFactor: 2 });
 
     console.log(`\n  \x1b[90mPreparing cinematic tour: ${url}...\x1b[0m`);
-    await page.goto(url, { waitUntil: 'networkidle2' });
 
     if (noWindow) {
         // ── Pure Mode (Full Viewport) ──
+        await page.goto(url, { waitUntil: 'networkidle2' });
         await new Promise(r => setTimeout(r, 2000));
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording native site tour...\x1b[0m`);
@@ -43,7 +49,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         
         await recorder.start(outputPath);
 
-        await page.evaluate(async (scrollDuration) => {
+        await page.evaluate(async (scrollDuration, useLinear) => {
             const wait = (ms) => new Promise(r => setTimeout(r, ms));
             await wait(1000);
             const totalToScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -53,7 +59,9 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                     function step(currentTime) {
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / scrollDuration, 1);
-                        const ease = -(Math.cos(Math.PI * progress) - 1) / 2;
+                        const p = progress;
+                        const customEase = p < 0.1 ? (p * p * 50) / 9 : p > 0.9 ? 1 - ((1 - p) * (1 - p) * 50) / 9 : (p * 10 / 9) - (1 / 18);
+                        const ease = useLinear ? p : customEase;
                         window.scrollTo(0, totalToScroll * ease);
                         if (progress < 1) window.requestAnimationFrame(step);
                         else resolve();
@@ -62,54 +70,70 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                 });
             }
             await wait(2000);
-        }, duration);
+        }, duration, linear);
         await recorder.stop();
         console.log = _log; // Restore original logger
     } else {
-        // ── Framed Mode (Magic Container) ──
-        await page.evaluate((bgCSS, hostname) => {
-            const bodyStyle = window.getComputedStyle(document.body);
-            const originalBg = bodyStyle.backgroundColor;
-            const originalBgImg = bodyStyle.backgroundImage !== 'none' ? bodyStyle.backgroundImage : '';
-            const originalColor = bodyStyle.color;
-            const originalChildren = Array.from(document.body.children);
-            const bodyClasses = document.body.className;
-            
-            const wrapper = document.createElement('div');
-            wrapper.id = 'snip-main-wrapper';
-            wrapper.style.cssText = `
-                background: ${bgCSS}; width: 100vw; height: 100vh;
-                display: flex; align-items: center; justify-content: center;
-                position: fixed; inset: 0; z-index: 2147483647; overflow: hidden;
-            `;
-
-            wrapper.innerHTML = `
-                <div id="snip-window" style="width: 85%; height: 80%; background: ${originalBg}; border-radius: 12px; box-shadow: 0 50px 100px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative;">
-                    <div id="snip-bar" style="height: 40px; background: ${originalBg}; filter: brightness(1.1); display: flex; align-items: center; padding: 0 15px; gap: 8px; border-bottom: 1px solid rgba(0,0,0,0.1); flex-shrink: 0;">
-                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f57;"></div>
-                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #febc2e;"></div>
-                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #28c840;"></div>
-                        <div style="flex: 1; text-align: center; font-family: sans-serif; font-size: 12px; color: ${originalColor}; opacity: 0.5; padding-right: 40px;">${hostname}</div>
+        // ── Framed Mode (Magic Iframe) ──
+        await page.goto('about:blank');
+        const hostname = new URL(url).hostname;
+        const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        margin: 0; padding: 0; width: 100vw; height: 100vh;
+                        background: ${bg.css}; background-attachment: fixed;
+                        display: flex; align-items: center; justify-content: center;
+                        overflow: hidden; font-family: sans-serif;
+                    }
+                    #snip-window {
+                        width: 1224px; height: 720px;
+                        border-radius: 12px; box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+                        display: flex; flex-direction: column; overflow: hidden;
+                        border: 1px solid rgba(255,255,255,0.1); position: relative;
+                        background: #000;
+                    }
+                    #snip-bar {
+                        height: 40px; background: #1a1a1a; display: flex; align-items: center;
+                        padding: 0 15px; gap: 8px; border-bottom: 1px solid rgba(0,0,0,0.3); flex-shrink: 0;
+                    }
+                    .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+                    .d-red { background: #ff5f57; }
+                    .d-yel { background: #febc2e; }
+                    .d-grn { background: #28c840; }
+                    #snip-title { flex: 1; text-align: center; font-size: 12px; color: #fff; opacity: 0.5; padding-right: 40px; pointer-events: none; }
+                    iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
+                </style>
+            </head>
+            <body>
+                <div id="snip-window">
+                    <div id="snip-bar">
+                        <div class="dot d-red"></div>
+                        <div class="dot d-yel"></div>
+                        <div class="dot d-grn"></div>
+                        <div id="snip-title">${hostname}</div>
                     </div>
-                    <div id="snip-scroller" class="${bodyClasses}" style="flex: 1; overflow-y: auto; background-color: ${originalBg}; background-image: ${originalBgImg}; position: relative; transform: translateZ(0); -webkit-overflow-scrolling: touch;">
-                    </div>
+                    <iframe id="target-frame" src="${url}"></iframe>
                 </div>
-            `;
-
-            document.body.appendChild(wrapper);
-            const scroller = document.getElementById('snip-scroller');
-            originalChildren.forEach(child => { if (child.id !== 'snip-main-wrapper') scroller.appendChild(child); });
-            document.body.style.overflow = 'hidden';
-        }, bg.css, new URL(url).hostname);
-
-        // Force browser to wait for the DOM reflow to finish visually painting before starting FFmpeg!
-        // This is necessary because Bun executes so fast that FFmpeg spawns before Chromium repaints the UI.
-        await new Promise(r => setTimeout(r, 2000));
+            </body>
+            </html>
+        `;
+        await page.setContent(html);
+        
+        // Wait for iframe to logically load
+        console.log(`  \x1b[90mWaiting for iframe to paint...\x1b[0m`);
+        const frameHandle = await page.waitForSelector('#target-frame');
+        const frame = await frameHandle.contentFrame();
+        
+        // Wait for network to slow down inside the iframe
+        await new Promise(r => setTimeout(r, 4000));
 
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording cinematic tour...\x1b[0m`);
 
-        // Suppress noisy FFmpeg MJPEG overread warnings from the library deeply
+        // Suppress noisy FFmpeg MJPEG overread warnings
         const _stderrWrite = process.stderr.write;
         process.stderr.write = function (string, encoding, fd) {
             if (string.includes('Error unable to capture video stream')) return;
@@ -134,20 +158,23 @@ export async function captureProductVideo(url, outputPath, options = {}) {
 
         await recorder.start(outputPath);
 
-        await page.evaluate(async (scrollDuration) => {
-            const scroller = document.getElementById('snip-scroller');
+        // Scroll inside the isolated iframe context!
+        await frame.evaluate(async (scrollDuration, useLinear) => {
             const wait = (ms) => new Promise(r => setTimeout(r, ms));
             await wait(1500);
 
-            const totalToScroll = scroller.scrollHeight - scroller.clientHeight;
+            // Document dimensions within the iframe
+            const totalToScroll = document.documentElement.scrollHeight - window.innerHeight;
             if (totalToScroll > 0) {
                 const startTime = performance.now();
                 await new Promise(resolve => {
                     function step(currentTime) {
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / scrollDuration, 1);
-                        const ease = -(Math.cos(Math.PI * progress) - 1) / 2;
-                        scroller.scrollTop = totalToScroll * ease;
+                        const p = progress;
+                        const customEase = p < 0.1 ? (p * p * 50) / 9 : p > 0.9 ? 1 - ((1 - p) * (1 - p) * 50) / 9 : (p * 10 / 9) - (1 / 18);
+                        const ease = useLinear ? p : customEase;
+                        window.scrollTo(0, totalToScroll * ease);
                         if (progress < 1) window.requestAnimationFrame(step);
                         else resolve();
                     }
@@ -155,7 +182,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                 });
             }
             await wait(2000);
-        }, duration);
+        }, duration, linear);
 
         await recorder.stop();
         console.log = _log; // Restore original logger

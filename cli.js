@@ -628,6 +628,7 @@ tool.command('product-video')
     .option('-o, --output <path>', 'Output file path')
     .option('--duration <ms>', 'Duration of the scroll in milliseconds', '8000')
     .option('--no-window', 'Record the real website only (no mockup frame)')
+    .option('--linear', 'Use a constant linear scroll speed instead of dynamic easing')
     .action(async (url, opts) => {
         let fullUrl = url.startsWith('http') ? url : `https://${url}`;
         if (!fs.existsSync(SNIPS_DIR)) fs.mkdirSync(SNIPS_DIR, { recursive: true });
@@ -640,6 +641,7 @@ tool.command('product-video')
                 background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
                 duration: parseInt(opts.duration, 10),
                 noWindow: opts.window === false,
+                linear: !!opts.linear,
             });
             let displayPath = outputPath.startsWith(os.homedir()) ? outputPath.replace(os.homedir(), '~') : outputPath;
             console.log(`\n  \x1b[32m✔\x1b[0m Product video saved to \x1b[1m${displayPath}\x1b[0m\n`);
