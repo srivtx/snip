@@ -70,6 +70,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         await page.evaluate((bgCSS, hostname) => {
             const bodyStyle = window.getComputedStyle(document.body);
             const originalBg = bodyStyle.backgroundColor;
+            const originalBgImg = bodyStyle.backgroundImage !== 'none' ? bodyStyle.backgroundImage : '';
             const originalColor = bodyStyle.color;
             const originalChildren = Array.from(document.body.children);
             const bodyClasses = document.body.className;
@@ -90,7 +91,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                         <div style="width: 12px; height: 12px; border-radius: 50%; background: #28c840;"></div>
                         <div style="flex: 1; text-align: center; font-family: sans-serif; font-size: 12px; color: ${originalColor}; opacity: 0.5; padding-right: 40px;">${hostname}</div>
                     </div>
-                    <div id="snip-scroller" class="${bodyClasses}" style="flex: 1; overflow-y: auto; background: ${originalBg}; position: relative; transform: translateZ(0); -webkit-overflow-scrolling: touch;">
+                    <div id="snip-scroller" class="${bodyClasses}" style="flex: 1; overflow-y: auto; background-color: ${originalBg}; background-image: ${originalBgImg}; position: relative; transform: translateZ(0); -webkit-overflow-scrolling: touch;">
                     </div>
                 </div>
             `;

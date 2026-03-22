@@ -11,6 +11,7 @@ function App() {
       <ScrollToTop />
       <div className="app" style={{ position: 'relative' }}>
         {/* ── BACKGROUND LAYERS (Locked at the bottom) ── */}
+        <div className="texture-grain" />
         <div className="texture-halftone" />
         <div className="texture-topo" />
         <div className="scanline" />

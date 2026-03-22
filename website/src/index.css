@@ -31,7 +31,7 @@ body {
 }
 
 /* ── LAYER 1-5: BACKGROUND TEXTURES (LOCKED AT BOTTOM) ── */
-body::before {
+.texture-grain {
   content: "";
   position: fixed;
   inset: 0;
