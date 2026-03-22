@@ -53,7 +53,7 @@ export default function Hero() {
             </div>
 
             <h1 style={{
-              fontSize: 'clamp(64px, 14vw, 140px)',
+              fontSize: 'clamp(45px, 14vw, 140px)',
               lineHeight: 0.8,
               letterSpacing: '-0.07em',
               marginBottom: '50px',
@@ -75,49 +75,45 @@ export default function Hero() {
               The high-fidelity media engine for developers. Generate snippets, diagrams, and cinematic production directly from your CLI.
             </p>
 
-            <div style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              gap: '20px',
-              flexWrap: 'wrap'
-            }}>
-              <button className="btn-studio" onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}>
-                Explore Studio <ArrowRight size={16} />
-              </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div className="hero-actions">
+                <button className="btn-studio" onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}>
+                  Explore Studio <ArrowRight size={16} />
+                </button>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div
                   onClick={copyCommand}
                   style={{
                     background: 'rgba(255,255,255,0.02)',
                     border: '1px solid var(--color-border)',
-                    padding: '12px 24px',
+                    padding: '12px clamp(12px, 3vw, 24px)',
                     borderRadius: 'var(--radius-sm)',
                     display: 'flex',
                     alignItems: 'center',
+                    flexWrap: 'wrap',
                     gap: '12px',
                     cursor: 'pointer',
                     fontFamily: 'var(--font-mono)',
-                    fontSize: '14px',
+                    fontSize: 'clamp(11px, 3.5vw, 14px)',
                     transition: '0.2s',
                     width: 'fit-content',
-                    justifyContent: 'space-between'
+                    maxWidth: '100%',
+                    justifyContent: 'center'
                   }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
                   onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
                 >
-                  <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}>bun add -g @srivtx/snip</span>
+                  <span style={{ color: '#fff', fontWeight: 600 }}>bun add -g @srivtx/snip</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ width: '1px', height: '16px', background: 'var(--color-border)' }} />
                     {copied ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
                   </div>
                 </div>
+              </div>
 
-                <div style={{ fontSize: '12px', color: 'var(--color-secondary)', opacity: 0.7, fontFamily: 'var(--font-mono)', textAlign: 'center' }}>
-                  <Zap size={10} color="#f8e71c" style={{ display: 'inline', marginRight: '4px', verticalAlign: '-1px' }} />
-                  Bun is 100x faster, but <span style={{ color: '#fff' }}>npm i -g @srivtx/snip</span> works too.
-                </div>
+              <div style={{ fontSize: '12px', color: 'var(--color-secondary)', opacity: 0.7, fontFamily: 'var(--font-mono)', textAlign: 'center' }}>
+                <Zap size={10} color="#f8e71c" style={{ display: 'inline', marginRight: '4px', verticalAlign: '-1px' }} />
+                Bun is 100x faster, but <span style={{ color: '#fff' }}>npm i -g @srivtx/snip</span> works too.
               </div>
             </div>
           </motion.div>
