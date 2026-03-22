@@ -53,7 +53,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                     function step(currentTime) {
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / scrollDuration, 1);
-                        const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                        const ease = -(Math.cos(Math.PI * progress) - 1) / 2;
                         window.scrollTo(0, totalToScroll * ease);
                         if (progress < 1) window.requestAnimationFrame(step);
                         else resolve();
@@ -146,7 +146,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
                     function step(currentTime) {
                         const elapsed = currentTime - startTime;
                         const progress = Math.min(elapsed / scrollDuration, 1);
-                        const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                        const ease = -(Math.cos(Math.PI * progress) - 1) / 2;
                         scroller.scrollTop = totalToScroll * ease;
                         if (progress < 1) window.requestAnimationFrame(step);
                         else resolve();
