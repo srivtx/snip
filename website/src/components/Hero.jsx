@@ -9,7 +9,7 @@ export default function Hero() {
   const copyCommand = () => {
     navigator.clipboard.writeText('bun add -g @srivtx/snip --trusted');
     setCopied(true);
-    
+
     confetti({
       particleCount: 150,
       spread: 70,
@@ -21,7 +21,7 @@ export default function Hero() {
   };
 
   return (
-    <section style={{ padding: '180px 0 120px 0', position: 'relative' }}>
+    <section style={{ padding: '120px 0 60px 0', position: 'relative' }}>
       <div className="container">
         <div style={{ textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
           <motion.div
@@ -30,14 +30,14 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
-              <div style={{ 
-                background: 'rgba(255, 255, 255, 0.03)', 
-                border: '1px solid rgba(255, 255, 255, 0.1)', 
-                color: '#fff', 
-                padding: '6px 14px', 
-                borderRadius: '100px', 
-                fontSize: '9px', 
-                fontWeight: 900, 
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                padding: '6px 14px',
+                borderRadius: '100px',
+                fontSize: '9px',
+                fontWeight: 900,
                 letterSpacing: '2px',
                 display: 'flex',
                 alignItems: 'center',
@@ -113,7 +113,7 @@ export default function Hero() {
                     {copied ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
                   </div>
                 </div>
-                
+
                 <div style={{ fontSize: '12px', color: 'var(--color-secondary)', opacity: 0.7, fontFamily: 'var(--font-mono)', textAlign: 'center' }}>
                   <Zap size={10} color="#f8e71c" style={{ display: 'inline', marginRight: '4px', verticalAlign: '-1px' }} />
                   Bun is 100x faster, but <span style={{ color: '#fff' }}>npm i -g @srivtx/snip</span> works too.
