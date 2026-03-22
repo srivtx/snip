@@ -1,6 +1,6 @@
 {
   "name": "@srivtx/snip",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Beautiful code snippet cards from your terminal. Like Carbon, but faster.",
   "type": "module",
   "bin": {
