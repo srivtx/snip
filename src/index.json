@@ -1,0 +1,72 @@
+[
+  {
+    "id": "snippet",
+    "command": "snip <file>",
+    "desc": "Generate a beautiful syntax-highlighted code snippet card.",
+    "keywords": ["code", "snippet", "card", "syntax", "highlight", "carbon", "image", "png", "photo", "screenshot", "export", "pretty", "share"],
+    "example": "snip app.js --theme dracula"
+  },
+  {
+    "id": "video",
+    "command": "snip video <file>",
+    "desc": "Render a smooth scrolling 60fps MP4 video of your code.",
+    "keywords": ["video", "scroll", "mp4", "cinematic", "animation", "twitter", "recording", "clip", "movie", "scrolling", "motion"],
+    "example": "snip video server.js --duration 10"
+  },
+  {
+    "id": "product-video",
+    "command": "snip tool product-video <url>",
+    "desc": "Generate a cinematic eased-scroll product tour of any website.",
+    "keywords": ["website", "tour", "scroll", "url", "product", "video", "browser", "preview", "demo", "site", "landing", "showcase", "ux"],
+    "example": "snip tool product-video google.com"
+  },
+  {
+    "id": "post",
+    "command": "snip post <text>",
+    "desc": "Generate a high-fidelity social media image card with your profile.",
+    "keywords": ["post", "tweet", "social", "card", "avatar", "handle", "profile", "image", "announcement", "text", "quote", "branding"],
+    "example": "snip post \"Just shipped Snip v1.0!\""
+  },
+  {
+    "id": "bg-remove",
+    "command": "snip image bg-remove <file>",
+    "desc": "Remove the background from any image using local AI.",
+    "keywords": ["background", "remove", "transparent", "png", "ai", "matting", "cutout", "bg", "bgremove", "bg-remove", "mask", "subject"],
+    "example": "snip image bg-remove avatar.jpg"
+  },
+  {
+    "id": "ocr",
+    "command": "snip image ocr <file>",
+    "desc": "Extract text from an image using local Tesseract engine.",
+    "keywords": ["ocr", "text", "extract", "read", "copy", "image", "scan", "recognition", "vision"],
+    "example": "snip image ocr screenshot.png"
+  },
+  {
+    "id": "mermaid",
+    "command": "snip tool mermaid <file>",
+    "desc": "Render a gorgeous diagram from a Mermaid.js definition file.",
+    "keywords": ["diagram", "mermaid", "flowchart", "graph", "architecture", "svg", "png", "chart", "map", "logic"],
+    "example": "snip tool mermaid architecture.mmd"
+  },
+  {
+    "id": "diff",
+    "command": "snip tool diff <v1> <v2>",
+    "desc": "Generate a beautiful side-by-side visual diff of two files.",
+    "keywords": ["diff", "compare", "changes", "vibe", "side-by-side", "git", "version", "history", "conflict"],
+    "example": "snip tool diff app-v1.js app-v2.js"
+  },
+  {
+    "id": "color",
+    "command": "snip tool color <path>",
+    "desc": "Extract a premium color palette from any image.",
+    "keywords": ["color", "palette", "swatch", "hex", "theme", "extract", "scheme", "ui", "design"],
+    "example": "snip tool color banner.jpg"
+  },
+  {
+    "id": "config",
+    "command": "snip config --author <name>",
+    "desc": "Configure per-user display settings like your name or social handle.",
+    "keywords": ["config", "setup", "author", "handle", "avatar", "settings", "profile", "identity", "defaults", "prefs"],
+    "example": "snip config --author \"Sribatsha Dash\""
+  }
+]

@@ -222,8 +222,7 @@ footer {
 
   /* ── Navigation: keep horizontal, just tighten padding ── */
   nav {
-    padding: 12px 20px !important;
-    gap: 16px !important;
+    /* Padding is handled by internal div in App.jsx for full-width banner support */
   }
 
   /* ── Hero section: enough top space below fixed nav ── */
@@ -328,4 +327,16 @@ footer {
   .card-studio [style*="font-family: var(--font-mono)"][style*="font-size: '15px'"] {
     font-size: 12px !important;
   }
+}
+
+/* ── RAG SHOWCASE ANIMATIONS ── */
+.spinner-mini {
+  animation: rotate 1.2s linear infinite;
+  display: inline-block;
+  transform-origin: center;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

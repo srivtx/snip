@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Zap, Copy, Check } from 'lucide-react';
+import { ArrowUpRight, Zap, Copy, Check, Command } from 'lucide-react';
 import Hero from '../components/Hero';
 import Preview from '../components/Preview';
 import FeatureGrid from '../components/FeatureGrid';
@@ -81,6 +81,76 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SEMANTIC INTENT (OFFLINE RAG) ── */}
+      <section style={{ padding: '120px 0', borderTop: '1px solid var(--color-border)', position: 'relative', overflow: 'hidden' }}>
+        <div className="container">
+          <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: '80px', alignItems: 'center' }}>
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+              style={{ flex: '1 1 400px' }}
+            >
+              <div className="card-studio" style={{
+                width: '100%',
+                background: '#050505',
+                border: '1px solid var(--color-border)',
+                borderRadius: '16px',
+                padding: '24px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '13px',
+                position: 'relative',
+                boxShadow: '0 40px 80px -20px rgba(0,0,0,0.8)'
+              }}>
+                <div style={{ color: '#888', marginBottom: '20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '2px' }}>Terminal_Log.exec</div>
+                
+                <div style={{ marginBottom: '12px', display: 'flex', gap: '12px' }}>
+                  <span style={{ color: 'var(--color-accent)' }}>$</span>
+                  <span style={{ color: '#fff' }}>snip "make a video of google.com" --duration 5000</span>
+                </div>
+                
+                <div style={{ color: 'var(--color-accent)', marginBottom: '4px', opacity: 0.8 }}>
+                  &gt; Intent: snip tool product-video &lt;url&gt;
+                </div>
+                <div style={{ color: '#f8e71c', marginBottom: '16px' }}>
+                  &gt; Auto-running: snip tool product-video google.com --duration 5000...
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#888' }}>
+                  <div className="spinner-mini" style={{ width: '12px', height: '12px', border: '2px solid rgba(255,255,255,0.1)', borderTopColor: '#f8e71c', borderRadius: '50%' }} />
+                  <span>Preparing cinematic tour...</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <div style={{ flex: '1 1 400px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '3px', color: '#f8e71c', marginBottom: '16px' }}>
+                Offline RAG v2
+              </div>
+              <h2 style={{ fontSize: '56px', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1.1, marginBottom: '24px' }}>
+                Telepathic <br/>Command Intent.
+              </h2>
+              <p style={{ color: 'var(--color-secondary)', fontSize: '18px', lineHeight: 1.6, marginBottom: '32px' }}>
+                Snip now features a <strong style={{ color: '#fff' }}>Superior Offline RAG</strong> layer. It maps natural language prompts directly to native subcommands—no API keys, no latency, zero compromise on privacy.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '16px' }}>
+                {[
+                  { icon: <Zap size={14} strokeWidth={2.5} />, text: "Zero-Latency Semantic Discovery" },
+                  { icon: <Command size={14} strokeWidth={2.5} />, text: "Intelligent Argument Mapping" },
+                  { icon: <Check size={14} strokeWidth={2.5} />, text: "100% Offline Pattern Recognition" }
+                ].map((item, i) => (
+                  <motion.li 
+                    key={i} 
+                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}
+                  >
+                    <span style={{ color: '#f8e71c' }}>{item.icon}</span> {item.text}
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PERFORMANCE (BUN ALIAS) ── */}
       <section style={{ padding: '160px 0', borderTop: '1px solid var(--color-border)', position: 'relative', overflow: 'hidden' }}>
         {/* Subtle glow right side */}
@@ -88,30 +158,30 @@ export default function Home() {
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '80px', alignItems: 'center' }}>
-            
+
             <div style={{ flex: '1 1 400px' }}>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '20px', color: '#f8e71c', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}
               >
                 <Zap size={14} /> Maximum Performance
               </motion.div>
-              
-              <motion.h2 
+
+              <motion.h2
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
                 style={{ fontSize: '56px', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1.1, marginBottom: '24px' }}
               >
-                Snip runs at the <br/>speed of light.
+                Snip runs at the <br />speed of light.
               </motion.h2>
-              
-              <motion.p 
+
+              <motion.p
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
                 style={{ color: 'var(--color-secondary)', fontSize: '18px', lineHeight: 1.6, marginBottom: '40px', maxWidth: '440px' }}
               >
                 Snip is highly optimized for <strong style={{ color: '#fff' }}>Node.js</strong>. But if you have <strong style={{ color: '#fff' }}>Bun</strong> installed, you can bind this alias to your shell profile to instantly traverse the Bun engine.
               </motion.p>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }}
                 onClick={copyAlias}
                 style={{
@@ -147,8 +217,8 @@ export default function Home() {
                 To remove: run <code style={{ color: 'rgba(255,255,255,0.6)' }}>unalias snip</code> or remove from your .zshrc
               </motion.p>
             </div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
               style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}
             >
@@ -170,21 +240,21 @@ export default function Home() {
                   <div style={{ width: '10px', height: '10px', borderRadius: '5px', background: '#333' }} />
                   <div style={{ width: '10px', height: '10px', borderRadius: '5px', background: '#333' }} />
                 </div>
-                
+
                 <div style={{ marginBottom: '8px' }}>
                   <span style={{ color: '#888' }}>$</span> <span style={{ color: '#fff' }}>time snip snippet.js</span>
                 </div>
                 <div style={{ color: '#888', marginBottom: '24px' }}>
                   node execution  <span style={{ color: '#ff4444' }}>0.24s user</span> 0.04s system
                 </div>
-                
+
                 <div style={{ marginBottom: '8px' }}>
                   <span style={{ color: '#f8e71c' }}>$</span> <span style={{ color: '#fff' }}>time bunx --bun snip snippet.js</span>
                 </div>
                 <div style={{ color: '#888', marginBottom: '24px' }}>
                   bun execution   <span style={{ color: '#f8e71c' }}>0.01s user</span> 0.01s system
                 </div>
-                
+
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px', background: 'linear-gradient(transparent, #050505)' }} />
               </div>
             </motion.div>

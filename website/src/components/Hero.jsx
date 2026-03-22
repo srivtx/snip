@@ -29,7 +29,24 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '40px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              <div style={{ 
+                background: 'rgba(255, 255, 255, 0.03)', 
+                border: '1px solid rgba(255, 255, 255, 0.1)', 
+                color: '#fff', 
+                padding: '6px 14px', 
+                borderRadius: '100px', 
+                fontSize: '9px', 
+                fontWeight: 900, 
+                letterSpacing: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+              }}>
+                <Zap size={10} color="#f8e71c" strokeWidth={3} /> Superior Offline RAG v2
+              </div>
               <span style={{ fontSize: '11px', fontWeight: 800, color: '#fff', textTransform: 'uppercase', letterSpacing: '3px', opacity: 0.4 }}>
                 Engineering Utility / V1.0
               </span>

@@ -18,6 +18,9 @@ import { renderDiffHTML } from './src/diff.js';
 import { renderOGHTML } from './src/og.js';
 import { captureVideo } from './src/video.js';
 import { captureProductVideo } from './src/product-video.js';
+import { findCommand } from './src/rag.js';
+import * as p from '@clack/prompts';
+import pc from 'picocolors';
 
 const SNIPS_DIR = path.join(os.homedir(), 'Desktop', 'snips');
 
@@ -26,7 +29,8 @@ const program = new Command();
 program
     .name('snip')
     .description('✂️  Beautiful developer utilities from your terminal')
-    .version('1.0.0');
+    .version('1.0.0')
+    .allowUnknownOption();
 
 // ── DEFAULT ACTION (Code Snippets) ──
 program
@@ -49,7 +53,35 @@ program
             } else {
                 const filePath = path.resolve(file);
                 if (!fs.existsSync(filePath)) {
-                    console.error(`\n  ✖ File not found: ${file}\n`);
+                    // ── OFFLINE RAG FALLBACK ──
+                    const match = findCommand(process.argv.slice(2).join(' '));
+                    const isRecursive = process.env.SNIP_AUTORUN === '1';
+
+                    if (match && match.score > 8 && !isRecursive) {
+                        const args = match.extracted.join(' ');
+                        const proposed = match.command.replace(/<.*?>/g, args || '[path]');
+                        
+                        if (match.score > 25) {
+                            console.log(`\n  > Intent: ${match.command}`);
+                            console.log(`  > Auto-running: ${proposed}...\n`);
+                            try {
+                                const cmdToExec = proposed.replace('snip', `node "${process.argv[1]}"`);
+                                execSync(cmdToExec, { 
+                                    stdio: 'inherit',
+                                    env: { ...process.env, SNIP_AUTORUN: '1' } 
+                                });
+                                process.exit(0);
+                            } catch (e) {
+                                process.exit(1);
+                            }
+                        }
+
+                        console.error(`\n  ✖ Unknown: "${file}"`);
+                        console.log(`  > Did you mean: ${match.command}?`);
+                        console.log(`  > Try running: ${proposed}\n`);
+                        process.exit(1);
+                    }
+                    console.log(`\n  ${pc.red('✖')} File not found: ${pc.red(file)}\n`);
                     process.exit(1);
                 }
                 inputCode = fs.readFileSync(filePath, 'utf-8');
@@ -888,5 +920,57 @@ function readInteractive() {
         });
     });
 }
+
+// ── OFFLINE RAG LAYER ──
+program
+    .command('find')
+    .description('› Find the right command using natural language (Offline RAG)')
+    .argument('<prompt>', 'What do you want to do?')
+    .action(async (prompt) => {
+        const match = findCommand(prompt);
+        if (match) {
+            console.log(`\n  > Intent: ${match.command}`);
+            console.log(`    ${match.desc}`);
+            console.log(`\n  Example: ${match.example}\n`);
+        } else {
+            console.log(`\n  ✖ Command not found for "${prompt}".`);
+        }
+    });
+
+// ── SUGGESTION ENGINE (Automatic Intent Mapping) ──
+program.on('command:*', function () {
+    const input = process.argv.slice(2).join(' ');
+    const match = findCommand(input);
+    
+    // Prevent Infinite Loops
+    const isRecursive = process.env.SNIP_AUTORUN === '1';
+
+    if (match && match.score > 8 && !isRecursive) {
+        const args = match.extracted.join(' ');
+        const proposed = match.command.replace(/<.*?>/g, args || '[path]');
+        
+        if (match.score > 25) {
+            console.log(`\n  > Intent: ${match.command}`);
+            console.log(`  > Auto-running: ${proposed}...\n`);
+            try {
+                const cmdToExec = proposed.replace('snip', `node "${process.argv[1]}"`);
+                execSync(cmdToExec, { 
+                    stdio: 'inherit',
+                    env: { ...process.env, SNIP_AUTORUN: '1' } 
+                });
+                process.exit(0);
+            } catch (e) {
+                process.exit(1);
+            }
+        }
+
+        console.error(`\n  ✖ Unknown command: "${process.argv[2]}"`);
+        console.log(`  > Did you mean: ${match.command}?`);
+        console.log(`  > Try running: ${proposed}\n`);
+    } else {
+        console.error(`\n  ✖ Unknown: "${process.argv[2]}"\n`);
+    }
+    process.exit(1);
+});
 
 program.parse();
