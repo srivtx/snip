@@ -18,16 +18,17 @@ bun add -g @srivtx/snip --trusted
 npm install -g @srivtx/snip
 ```
 
-### Ultra-Fast Execution (Optional)
-Even if you install with Bun, the CLI runs on Node.js. To force it to run inside Bun's hyper-fast engine and execute instantly, add this alias to your `~/.zshrc` or `~/.bashrc`:
+## Ultra-Fast Execution (Highly Recommended)
+Add this alias to your `~/.zshrc` or `~/.bashrc` to run the tool through Bun's engine. This makes execution near-instant by skipping Node's startup overhead:
 ```bash
-alias snip="bunx --bun snip"
+alias snip="bunx --bun @srivtx/snip"
 ```
 
-## Setup
+To remove the alias, run `unalias snip` or delete the line from your shell profile.
+```
 
-You can set your default author name, social handle, and preferred theme so you don't have to type them as flags every time.
-
+## Setup & Configuration
+You can set your default author name, social handle, and profile picture so you don't have to type them as flags every time.
 ```bash
 snip config --init
 ```
@@ -38,7 +39,6 @@ snip config --init
 
 ### 1. Code Snippets
 Turn local files or clipboard data into syntax-highlighted PNGs.
-
 ```bash
 # Reads file and auto-detects language
 snip src/utils.js
@@ -47,81 +47,71 @@ snip src/utils.js
 snip --paste --lang python
 ```
 
-### 2. Social Posts
-Generate text-based social media cards (like X or LinkedIn posts) with your author attribution.
-
+### 2. Website Product Tours
+Generate professional, cinematically scrolling videos of any landing page.
 ```bash
-snip post "Just shipped the new rendering engine!" --author "Zen" --handle "@zen" --bg neon
+# Standard tour with MacOS window frame
+snip tool product-video my-site.com --duration 12000
+
+# Professional linear tour (perfect constant speed)
+snip tool product-video my-site.com --linear
+
+# Pure tour (real website only, no frame)
+snip tool product-video my-site.com --no-window
 ```
 
-### 3. Website Mockups
-Wrap a URL or local HTML file in a Safari browser frame.
-
+### 3. Open Graph & Social Cards
+Generate social share images or text-based achievement cards.
 ```bash
-snip mockup https://github.com/srivtx/snip
+# Open Graph (OG) Image
+snip tool og "How to Build a CLI" --description "A deep dive into Node.js"
+
+# Achievement Post
+snip post "Just reached 1000 stars on GitHub!" --bg candy
 ```
 
-### 4. Diagrams
+### 4. Mockups & Screenshots
+Wrap elements in high-quality hardware frames.
+```bash
+# Wrap a screenshot in a MacOS frame
+snip mockup screenshot.png --type macos
+
+# High-res website screenshot
+snip site google.com --full
+```
+
+### 5. Diagrams
 Render Mermaid.js diagrams to high-res PNGs.
-
 ```bash
 snip diagram architecture.mmd
 snip diagram --paste
 ```
 
-### 5. Open Graph Images
-Quickly generate an OG image for a blog post or website.
+---
 
-```bash
-snip tool og "How to Build a CLI" --bg dawn
-```
+## Image & Developer Utilities
+
+Local, privacy-first processing tools. No data ever leaves your machine.
+
+- `snip image bg-remove profile.jpg` (Remove background with AI)
+- `snip image compress heavy.png --quality 80`
+- `snip image ocr screenshot.png` (Extract text)
+- `snip image resize hero.png --width 1200`
+- `snip image palette photo.jpg` (Extract hex codes)
+
+- `snip tool qr https://google.com`
+- `snip tool svg logo.svg` (SVG to PNG)
+- `snip tool favicon logo.png` (Generate all favicon sizes)
+- `snip tool color #ff0055` (Color analysis)
+- `snip tool diff file1.js file2.js` (Visual code diff)
 
 ---
 
-## Image Utilities
-
-We added some local image processing utilities so you don't need to open Photoshop.
-
-- `snip image bg-remove profile.jpg` (Removes background locally using AI)
-- `snip image compress heavy.png --quality 80` (Fast TinyPNG alternative)
-- `snip image ocr screenshot.png` (Extracts text from images)
-- `snip image svg2png logo.svg --width 1200`
-- `snip image resize hero.png 1200x800`
-
-## Developer Tools
-
-Quick tools for common web-dev tasks.
-
-- `snip tool qr https://github.com/srivtx/snip`
-- `snip tool colors brand.png` (Extract dominant palette)
-- `snip tool favicon logo.png` (Generates all standard `.ico` and `.png` sizes)
-- `snip tool base64 image.png`
-
-## Video
-
-Generate scrolling `.mp4` videos from code snippets or product UI frames.
-
-```bash
-snip video product ./frames --output trailer.mp4
-```
+## Themes & Backgrounds
+Most commands support the `--bg` flag. Available presets:
+- `ocean`, `sunset`, `aurora`, `neon`, `midnight`, `dawn`, `candy`, `emerald`, `boring`.
 
 ---
-
-## Themes
-
-Use the `--bg` flag on almost any command to apply a custom background gradient. Available themes:
-
-- `ocean`
-- `sunset`
-- `aurora`
-- `neon`
-- `midnight`
-- `dawn`
-
-```bash
-snip main.rs --bg midnight
-```
 
 ## License
-
 MIT

@@ -18,7 +18,7 @@ export default function Home() {
   };
 
   const copyAlias = () => {
-    navigator.clipboard.writeText('alias snip="bunx --bun snip"');
+    navigator.clipboard.writeText('alias snip="bunx --bun @srivtx/snip"');
     setCopiedAlias(true);
     setTimeout(() => setCopiedAlias(false), 2000);
   };
@@ -132,13 +132,20 @@ export default function Home() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <span style={{ color: '#888', userSelect: 'none' }}>$</span>
-                  <span style={{ color: '#fff', fontSize: '14px' }}>alias snip="bunx --bun snip"</span>
+                  <span style={{ color: '#fff', fontSize: '14px' }}>alias snip="bunx --bun @srivtx/snip"</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '1px', height: '16px', background: 'var(--color-border)' }} />
                   {copiedAlias ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
                 </div>
               </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }}
+                style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px', marginTop: '12px', fontFamily: 'var(--font-mono)' }}
+              >
+                To remove: run <code style={{ color: 'rgba(255,255,255,0.6)' }}>unalias snip</code> or remove from your .zshrc
+              </motion.p>
             </div>
             
             <motion.div 

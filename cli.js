@@ -91,7 +91,7 @@ program
             outputPath = path.join(SNIPS_DIR, `${base}-${timestamp}.png`);
         }
 
-        console.log(`\nsnip v1.0.0`);
+        console.log(`\nsnip v1.0.9`);
         console.log(`\x1b[90mtheme: ${theme} | bg: ${background} | lang: ${lang}\x1b[0m\n`);
 
         const html = await renderHTML(inputCode, { theme, lang, background, showLineNumbers, filename, padding });
@@ -173,7 +173,7 @@ program
 
         console.log(`\n  \x1b[90mRendering HTML for video...\x1b[0m`);
         const html = await renderHTML(inputCode, { theme, lang, background, showLineNumbers, filename, padding });
-        
+
         try {
             await captureVideo(html, outputPath);
             let displayPath = outputPath.startsWith(os.homedir()) ? outputPath.replace(os.homedir(), '~') : outputPath;
@@ -195,7 +195,7 @@ program
     .option('-p, --padding <px>', 'Card outer padding in px', '42')
     .action(async (input, opts) => {
         let diagramInput = input;
-        
+
         if (!diagramInput && !process.stdin.isTTY) {
             diagramInput = await readStdin();
         } else if (!diagramInput) {
@@ -265,7 +265,7 @@ program
             // Simple heuristic: if it's an image, render image mockup
             const ext = path.extname(inputPath).toLowerCase();
             const isImage = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
-            
+
             let content = inputPath;
             if (!isImage) {
                 // If it's code, we should really highlight it first.
@@ -285,7 +285,7 @@ program
             if (!fs.existsSync(SNIPS_DIR)) fs.mkdirSync(SNIPS_DIR, { recursive: true });
             const timestamp = new Date().getTime();
             const outputPath = opts.output ? path.resolve(opts.output) : path.join(SNIPS_DIR, `mockup-${timestamp}.png`);
-            
+
             fs.writeFileSync(outputPath, buffer);
             console.log(`  \x1b[32m✔\x1b[0m saved to \x1b[1m${outputPath.replace(os.homedir(), '~')}\x1b[0m`);
             copyImageToClipboard(outputPath);
@@ -412,7 +412,7 @@ image.command('compress')
             const { default: sharp } = await import('sharp');
             const ext = path.extname(inputPath).toLowerCase();
             const base = path.basename(inputPath, ext);
-            
+
             if (!fs.existsSync(SNIPS_DIR)) fs.mkdirSync(SNIPS_DIR, { recursive: true });
             const outExt = ext || '.png';
             const outputPath = opts.output ? path.resolve(opts.output) : path.join(SNIPS_DIR, `${base}-opt${outExt}`);
@@ -637,7 +637,7 @@ tool.command('product-video')
         const outputPath = opts.output ? path.resolve(opts.output) : path.join(SNIPS_DIR, `product-${domain}-${timestamp}.mp4`);
 
         try {
-            await captureProductVideo(fullUrl, outputPath, { 
+            await captureProductVideo(fullUrl, outputPath, {
                 background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
                 duration: parseInt(opts.duration, 10),
                 noWindow: opts.window === false,
@@ -703,7 +703,7 @@ tool.command('og')
     .action(async (title, description, opts) => {
         const config = loadConfig();
         console.log(`\n  \x1b[90mGenerating OG image...\x1b[0m`);
-        
+
         try {
             const html = renderOGHTML(title, description, {
                 background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
@@ -770,7 +770,7 @@ program.command('config')
             const p = await import('@clack/prompts');
             const pc = (await import('picocolors')).default;
             const config = loadConfig();
-            
+
             console.log('');
             p.intro(pc.bgMagenta(pc.black(' SNIP SETUP WIZARD ')));
 
@@ -814,7 +814,7 @@ program.command('config')
 
         const validKeys = ['author', 'handle', 'pic'];
         const updates = Object.keys(opts).filter(k => validKeys.includes(k)).reduce((acc, key) => { acc[key] = opts[key]; return acc; }, {});
-        
+
         if (Object.keys(updates).length > 0) {
             saveConfig(updates);
             console.log(`\n  \x1b[32m✔\x1b[0m config saved to ${getConfigPath()}\n`);
