@@ -7,14 +7,16 @@ export default function Hero() {
   const [copied, setCopied] = React.useState(false);
 
   const copyCommand = () => {
-    navigator.clipboard.writeText('npm install -g @srivtx/snip');
+    navigator.clipboard.writeText('bun add -g @srivtx/snip --trusted');
     setCopied(true);
+    
     confetti({
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 },
       colors: ['#FFFFFF', '#888888', '#444444']
     });
+
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -58,7 +60,7 @@ export default function Hero() {
 
             <div style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               justifyContent: 'center',
               gap: '20px',
               flexWrap: 'wrap'
@@ -67,28 +69,38 @@ export default function Hero() {
                 Explore Studio <ArrowRight size={16} />
               </button>
 
-              <div
-                onClick={copyCommand}
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid var(--color-border)',
-                  padding: '12px 24px',
-                  borderRadius: 'var(--radius-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '14px',
-                  transition: '0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
-              >
-                <Terminal size={14} className="text-dim" />
-                <span style={{ color: '#fff', fontWeight: 600 }}>npm i -g @srivtx/snip</span>
-                <div style={{ width: '1px', height: '16px', background: 'var(--color-border)' }} />
-                {copied ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div
+                  onClick={copyCommand}
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid var(--color-border)',
+                    padding: '12px 24px',
+                    borderRadius: 'var(--radius-sm)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '14px',
+                    transition: '0.2s',
+                    width: 'fit-content',
+                    justifyContent: 'space-between'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                >
+                  <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}>bun add -g @srivtx/snip</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '1px', height: '16px', background: 'var(--color-border)' }} />
+                    {copied ? <Check size={14} color="#fff" /> : <Copy size={14} className="text-dim" />}
+                  </div>
+                </div>
+                
+                <div style={{ fontSize: '12px', color: 'var(--color-secondary)', opacity: 0.7, fontFamily: 'var(--font-mono)', textAlign: 'center' }}>
+                  <Zap size={10} color="#f8e71c" style={{ display: 'inline', marginRight: '4px', verticalAlign: '-1px' }} />
+                  Bun is 100x faster, but <span style={{ color: '#fff' }}>npm i -g @srivtx/snip</span> works too.
+                </div>
               </div>
             </div>
           </motion.div>
