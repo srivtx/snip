@@ -33,6 +33,14 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         await new Promise(r => setTimeout(r, 2000));
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording native site tour...\x1b[0m`);
+        
+        // Suppress noisy FFmpeg MJPEG overread warnings from the library
+        const _log = console.log;
+        console.log = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes('Error unable to capture video stream')) return;
+            _log(...args);
+        };
+        
         await recorder.start(outputPath);
 
         await page.evaluate(async (scrollDuration) => {
@@ -56,6 +64,7 @@ export async function captureProductVideo(url, outputPath, options = {}) {
             await wait(2000);
         }, duration);
         await recorder.stop();
+        console.log = _log; // Restore original logger
     } else {
         // ── Framed Mode (Magic Container) ──
         await page.evaluate((bgCSS, hostname) => {
@@ -92,8 +101,36 @@ export async function captureProductVideo(url, outputPath, options = {}) {
             document.body.style.overflow = 'hidden';
         }, bg.css, new URL(url).hostname);
 
+        // Force browser to wait for the DOM reflow to finish visually painting before starting FFmpeg!
+        // This is necessary because Bun executes so fast that FFmpeg spawns before Chromium repaints the UI.
+        await new Promise(r => setTimeout(r, 2000));
+
         const recorder = new PuppeteerScreenRecorder(page, { ffmpeg_Path: ffmpegStatic, fps, videoFrame: { width, height } });
         console.log(`  \x1b[90mRecording cinematic tour...\x1b[0m`);
+
+        // Suppress noisy FFmpeg MJPEG overread warnings from the library deeply
+        const _stderrWrite = process.stderr.write;
+        process.stderr.write = function (string, encoding, fd) {
+            if (string.includes('Error unable to capture video stream')) return;
+            return _stderrWrite.apply(process.stderr, arguments);
+        };
+        const _stdoutWrite = process.stdout.write;
+        process.stdout.write = function (string, encoding, fd) {
+            if (string.includes('Error unable to capture video stream')) return;
+            return _stdoutWrite.apply(process.stdout, arguments);
+        };
+
+        const _log = console.log;
+        const _error = console.error;
+        console.log = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes('Error unable to capture video stream')) return;
+            _log(...args);
+        };
+        console.error = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes('Error unable to capture video stream')) return;
+            _error(...args);
+        };
+
         await recorder.start(outputPath);
 
         await page.evaluate(async (scrollDuration) => {
@@ -120,6 +157,10 @@ export async function captureProductVideo(url, outputPath, options = {}) {
         }, duration);
 
         await recorder.stop();
+        console.log = _log; // Restore original logger
+        console.error = _error;
+        process.stderr.write = _stderrWrite;
+        process.stdout.write = _stdoutWrite;
     }
 
     await browser.close();

@@ -18,6 +18,12 @@ bun add -g @srivtx/snip --trusted
 npm install -g @srivtx/snip
 ```
 
+### Ultra-Fast Execution (Optional)
+Even if you install with Bun, the CLI runs on Node.js. To force it to run inside Bun's hyper-fast engine and execute instantly, add this alias to your `~/.zshrc` or `~/.bashrc`:
+```bash
+alias snip="bunx --bun snip"
+```
+
 ## Setup
 
 You can set your default author name, social handle, and preferred theme so you don't have to type them as flags every time.
