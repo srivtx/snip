@@ -30,35 +30,48 @@ function fuzzyMatch(str1, str2) {
 }
 
 /**
- * Extract arguments (files, URLs, flags, and values) from a natural language prompt
+ * Extract arguments (files, URLs, flags, quoted strings, and values) from a natural language prompt
  */
 function extractArgs(prompt, item) {
-    const words = prompt.split(/\s+/);
     const args = [];
-    
-    const isUrl = (w) => /^(https?:\/\/)?([\w-]+\.)+[\w-]+/.test(w);
+
+    // 1. Extract quoted strings first (critical for diagram arrow syntax etc.)
+    const quotedStrings = [];
+    const withoutQuotes = prompt.replace(/"([^"]+)"|'([^']+)'/g, (match, g1, g2) => {
+        quotedStrings.push(g1 || g2);
+        return '';
+    });
+
+    const words = withoutQuotes.split(/\s+/).filter(Boolean);
+
+    const isUrl = (w) => /^(https?:\/\/)?[\w-]+\.[\w-]+/.test(w);
     const isFile = (w) => /\.(js|jsx|ts|tsx|css|html|md|png|jpg|jpeg|svg|mmd|mp4)$/i.test(w);
     const isFlag = (w) => w.startsWith('--');
     const isNumeric = (w) => /^\d+$/.test(w);
 
     for (let i = 0; i < words.length; i++) {
         const word = words[i];
-        const clean = word.replace(/['",]/g, '');
-        
+        const clean = word.replace(/[',]/g, '');
+
         if (isFlag(clean)) {
             args.push(clean);
-            // If the next word is a value (numeric or quoted), capture it too
             if (i + 1 < words.length) {
-                const next = words[i + 1].replace(/['",]/g, '');
+                const next = words[i + 1].replace(/[',]/g, '');
                 if (isNumeric(next) || !isFlag(next)) {
                     args.push(next);
-                    i++; // Skip the next word since we consumed it
+                    i++;
                 }
             }
         } else if ((isUrl(clean) || isFile(clean)) && !item.keywords.includes(clean.toLowerCase())) {
             args.push(clean);
         }
     }
+
+    // 2. Add quoted strings wrapped in quotes to preserve spaces/arrows
+    for (const qs of quotedStrings) {
+        args.push(`"${qs}"`);
+    }
+
     return args;
 }
 

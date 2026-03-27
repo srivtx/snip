@@ -19,6 +19,7 @@ import { renderOGHTML } from './src/og.js';
 import { captureVideo } from './src/video.js';
 import { captureProductVideo } from './src/product-video.js';
 import { findCommand } from './src/rag.js';
+import { fetchBaseABI, generateABIMermaid, fetchTransaction, fetchTxTokenTransfers, generateTxMermaid } from './src/onchain.js';
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
 
@@ -54,12 +55,20 @@ program
                 const filePath = path.resolve(file);
                 if (!fs.existsSync(filePath)) {
                     // ── OFFLINE RAG FALLBACK ──
-                    const match = findCommand(process.argv.slice(2).join(' '));
+                    // Reconstruct prompt, re-quoting argv entries that contain spaces
+                    const rawArgs = process.argv.slice(2);
+                    const prompt = rawArgs.map(a => a.includes(' ') || a.includes('>') ? `"${a}"` : a).join(' ');
+                    const match = findCommand(prompt);
                     const isRecursive = process.env.SNIP_AUTORUN === '1';
 
                     if (match && match.score > 8 && !isRecursive) {
                         const args = match.extracted.join(' ');
-                        const proposed = match.command.replace(/<.*?>/g, args || '[path]');
+                        let proposed = match.command;
+                        if (/<.*?>/.test(proposed)) {
+                            proposed = proposed.replace(/<.*?>/g, args || '[path]');
+                        } else if (args) {
+                            proposed = proposed + ' ' + args;
+                        }
                         
                         if (match.score > 25) {
                             console.log(`\n  > Intent: ${match.command}`);
@@ -273,6 +282,112 @@ program
             }
         } catch (err) {
             console.error(`\n  \x1b[31m✖\x1b[0m Diagram generation failed: ${err.message}\n`);
+        }
+    });
+
+// ── MAP COMMAND (Onchain Visualizer) ──
+program
+    .command('map')
+    .description('Generate an onchain architecture diagram from a Base contract address')
+    .argument('<address>', 'Smart contract address starting with 0x')
+    .option('-b, --bg <background>', 'Background gradient preset', DEFAULT_BG)
+    .option('-o, --output <path>', 'Output PNG file path')
+    .option('-p, --padding <px>', 'Card outer padding in px', '42')
+    .action(async (address, opts) => {
+        if (!/^0x[a-fA-F0-9]{40}$/i.test(address)) {
+            console.error('\n  ✖ Invalid Ethereum address\n');
+            return;
+        }
+
+        console.log(`\n  \x1b[90mFetching verified ABI from Base Blockscout for ${address}...\x1b[0m`);
+        try {
+            const { abi, name: contractName } = await fetchBaseABI(address);
+            console.log(`  \x1b[32m✔\x1b[0m ABI Fetched (${contractName})! Generating diagram...`);
+            
+            const mermaidCode = generateABIMermaid(abi, address, contractName);
+            
+            const html = renderMermaidHTML(mermaidCode, {
+                background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
+                padding: parseInt(opts.padding, 10) || 42,
+                style: 'default',
+                dark: true,
+            });
+
+            const buffer = await captureScreenshot(html);
+            if (!fs.existsSync(SNIPS_DIR)) fs.mkdirSync(SNIPS_DIR, { recursive: true });
+
+            const timestamp = new Date().getTime();
+            const outputPath = opts.output ? path.resolve(opts.output) : path.join(SNIPS_DIR, `onchain-${address.slice(0,6)}-${timestamp}.png`);
+            fs.writeFileSync(outputPath, buffer);
+
+            let displayPath = outputPath.startsWith(os.homedir()) ? outputPath.replace(os.homedir(), '~') : outputPath;
+            console.log(`\n  \x1b[32m✔\x1b[0m saved to \x1b[1m${displayPath}\x1b[0m`);
+
+            try {
+                copyImageToClipboard(outputPath);
+                console.log(`  \x1b[32m✔\x1b[0m copied to clipboard\n`);
+            } catch {
+                console.log(`  \x1b[33m⚠\x1b[0m failed to copy to clipboard\n`);
+            }
+        } catch (err) {
+            console.error(`\n  \x1b[31m✖\x1b[0m Mapping failed: ${err.message}\n`);
+        }
+    });
+
+// ── TX COMMAND (Transaction Visualizer) ──
+program
+    .command('tx')
+    .description('Visualize a Base transaction as a cinematic flow diagram')
+    .argument('<hash>', 'Transaction hash starting with 0x')
+    .option('-b, --bg <background>', 'Background gradient preset', DEFAULT_BG)
+    .option('-o, --output <path>', 'Output PNG file path')
+    .option('-p, --padding <px>', 'Card outer padding in px', '42')
+    .action(async (hash, opts) => {
+        if (!/^0x[a-fA-F0-9]{64}$/i.test(hash)) {
+            console.error('\n  ✖ Invalid transaction hash\n');
+            return;
+        }
+
+        console.log(`\n  \x1b[90mFetching transaction from Base Blockscout...\x1b[0m`);
+        try {
+            const [tx, tokenTransfers] = await Promise.all([
+                fetchTransaction(hash),
+                fetchTxTokenTransfers(hash)
+            ]);
+
+            const status = tx.status === 'ok' ? '\x1b[32m✔ Success\x1b[0m' : '\x1b[31m✖ Failed\x1b[0m';
+            console.log(`  ${status} | Method: ${tx.method || 'transfer'} | Gas: ${tx.gas_used}`);
+            if (tokenTransfers.length > 0) {
+                console.log(`  \x1b[33m⚡\x1b[0m ${tokenTransfers.length} token transfer(s) detected`);
+            }
+
+            const mermaidCode = generateTxMermaid(tx, tokenTransfers);
+
+            const html = renderMermaidHTML(mermaidCode, {
+                background: (program.opts().bg !== DEFAULT_BG ? program.opts().bg : opts.bg),
+                padding: parseInt(opts.padding, 10) || 42,
+                style: 'default',
+                dark: true,
+            });
+
+            const buffer = await captureScreenshot(html);
+            if (!fs.existsSync(SNIPS_DIR)) fs.mkdirSync(SNIPS_DIR, { recursive: true });
+
+            const timestamp = new Date().getTime();
+            const outputPath = opts.output ? path.resolve(opts.output) : path.join(SNIPS_DIR, `tx-${hash.slice(0,8)}-${timestamp}.png`);
+            fs.writeFileSync(outputPath, buffer);
+
+            let displayPath = outputPath.startsWith(os.homedir()) ? outputPath.replace(os.homedir(), '~') : outputPath;
+            console.log(`\n  \x1b[32m✔\x1b[0m saved to \x1b[1m${displayPath}\x1b[0m`);
+
+            try {
+                copyImageToClipboard(outputPath);
+                console.log(`  \x1b[32m✔\x1b[0m copied to clipboard\n`);
+            } catch {
+                console.log(`  \x1b[33m⚠\x1b[0m failed to copy to clipboard\n`);
+            }
+        } catch (err) {
+            console.error(`\n  \x1b[31m✖\x1b[0m TX visualization failed: ${err.message}\n`);
         }
     });
 

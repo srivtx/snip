@@ -42,11 +42,11 @@
     "example": "snip image ocr screenshot.png"
   },
   {
-    "id": "mermaid",
-    "command": "snip tool mermaid <file>",
-    "desc": "Render a gorgeous diagram from a Mermaid.js definition file.",
-    "keywords": ["diagram", "mermaid", "flowchart", "graph", "architecture", "svg", "png", "chart", "map", "logic"],
-    "example": "snip tool mermaid architecture.mmd"
+    "id": "diagram",
+    "command": "snip diagram",
+    "desc": "Generate a beautiful diagram from an arrow syntax string or Mermaid file.",
+    "keywords": ["diagram", "mermaid", "flowchart", "graph", "architecture", "svg", "png", "chart", "map", "logic", "arrow", "create", "draw", "visual"],
+    "example": "snip diagram \"A -> B -> C\""
   },
   {
     "id": "diff",
