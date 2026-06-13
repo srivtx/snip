@@ -44,6 +44,7 @@
     "metascraper-logo": "^5.49.25",
     "metascraper-title": "^5.49.25",
     "picocolors": "^1.1.1",
+    "prettier": "^3.4.2",
     "puppeteer": "^23.0.0",
     "puppeteer-screen-recorder": "^3.0.6",
     "qrcode": "^1.5.4",

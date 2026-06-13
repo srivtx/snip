@@ -19,6 +19,7 @@ import { renderOGHTML } from './src/og.js';
 import { captureVideo } from './src/video.js';
 import { captureProductVideo } from './src/product-video.js';
 import { findCommand } from './src/rag.js';
+import { beautify } from './src/beautify.js';
 import { fetchBaseABI, generateABIMermaid, fetchTransaction, fetchTxTokenTransfers, generateTxMermaid } from './src/onchain.js';
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
@@ -135,6 +136,7 @@ program
         console.log(`\nsnip v1.0.9`);
         console.log(`\x1b[90mtheme: ${theme} | bg: ${background} | lang: ${lang}\x1b[0m\n`);
 
+        inputCode = await beautify(inputCode, lang);
         const html = await renderHTML(inputCode, { theme, lang, background, showLineNumbers, filename, padding });
         const buffer = await captureScreenshot(html);
         fs.writeFileSync(outputPath, buffer);
@@ -213,6 +215,7 @@ program
         }
 
         console.log(`\n  \x1b[90mRendering HTML for video...\x1b[0m`);
+        inputCode = await beautify(inputCode, lang);
         const html = await renderHTML(inputCode, { theme, lang, background, showLineNumbers, filename, padding });
 
         try {
